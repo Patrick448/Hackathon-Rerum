@@ -1,0 +1,16 @@
+myFunc(num :: Int, ch :: Char): Int, Int{
+    b=1;
+    a=3;
+
+   return 0, 1;
+}
+
+main (){
+    var = -50 + 5;
+    x = var + 10;
+ 
+    myFunc(x,'a') <z,a>;
+    a = myFunc(x,'a')[0];
+    --read b;
+    --print b;
+}

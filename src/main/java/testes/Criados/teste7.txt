@@ -1,0 +1,11 @@
+data Teste{t1 :: Int[]; t2 :: Int;}
+
+main (){
+    y = new Teste;
+    x=1;
+    print 1 + x;
+}
+
+
+
+

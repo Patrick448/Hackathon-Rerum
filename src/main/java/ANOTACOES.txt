@@ -1,0 +1,15 @@
+(RESOLVIDO) - geração de Java ignora quando existem escopos aninhados, colocando todas as variáveis no mesmo escopo
+(RESOLVIDO) - possível problema no visit(CallFunction c) do Java na linha:
+            String type = scopeVisitor.getCurrentScope().get(r.getID().getName());
+
+(RESOLVIDO) - CallFunctionVet está sendo interpretado pelo semântico como sendo tipo CMD, ao
+    invés do tipo que a função retorna
+
+__________________________________________JASMIN__________________________________________________
+
+- data
+- acesso de vetor e data
+- while
+- chamada de função vetor
+- chamada de função normal
+- polimorfismo

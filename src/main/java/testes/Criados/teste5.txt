@@ -1,0 +1,12 @@
+data Racional{numerador :: Int[]; denominador :: Int;}
+
+main (){
+    r = new Racional;
+    r.numerador = new Int[3];
+    r.numerador[0] = 1;
+
+    print r.numerador[0];
+
+}
+
+

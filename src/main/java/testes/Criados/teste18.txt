@@ -1,0 +1,18 @@
+data Teste{numerador :: Bool; denominador :: Int;}
+
+test(a::Int, b::Int):Int,Int
+{
+    return a*b, b/a;
+}
+
+main()
+{
+    t = new Teste;
+    read t.numerador;
+    a = 2;
+    b = 4;
+    test(a,b)<a, t.denominador>;
+    print t.numerador;
+    print '\n';
+    print '\n';
+}

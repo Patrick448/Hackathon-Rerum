@@ -1,0 +1,50 @@
+data Teste{numerador :: Teste; denominador :: Int;}
+
+func(c :: Char):Int{
+x=2;
+return x;
+}
+
+otherFunc():Int, Float{
+    return 1, 0.5;
+}
+
+yFunc(){
+ a = 1+2;
+ print a;
+}
+
+main(){
+    print 'a';
+    print true;
+    print 1;
+    print 5.55;
+    print 1+2;
+    print 1 * 2;
+    print 1 / 2;
+    print 1 - 2;
+    print 1 + (-2);
+    print 1 > 2;
+    print 1 < 2;
+    print 1 != 2;
+    print 1 == 2;
+    print false == !true;
+    a = new Int[5];
+    print a[0];
+    t = new Teste;
+    t.denominador = 10;
+    c = test(a,b)[1];
+    z = otherFunc()[0];
+    --t.denominador = otherFunc()[0];
+    --yFunc();
+    if(1 < 2){
+        print t.denominador;
+    }
+
+    iterate(5){
+        print 'u';
+    }
+}
+
+
+}

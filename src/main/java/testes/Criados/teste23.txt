@@ -1,0 +1,9 @@
+myFunction(){
+  print 3654;
+}
+
+main(){
+  a = 55;
+  print 22222;
+
+}

@@ -1,0 +1,18 @@
+data Integer{numerador :: Int[][][];}
+
+myFunc(num :: Int, ch :: Char): Int, Int{
+    b=1;
+    a=3;
+
+   return 0,0;
+}
+
+main (){
+    var = -50 + 5;
+    x = var + 10;
+    y = new Integer [3];
+    --y[1] = 'a';
+    print x;
+    print '\n';
+    print y;
+}

@@ -1,0 +1,15 @@
+data Racional{numerador :: Int; denominador :: Int;}
+
+f(r :: Racional): Int{
+    res = r.numerador / r.denominador;
+    return res;
+}
+
+main (){
+    r = new Racional;
+    r.numerador = 1;  
+    r.denominador = 2;
+    print f(r)[0];
+}
+
+

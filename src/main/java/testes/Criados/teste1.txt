@@ -1,0 +1,23 @@
+data Object{}
+data String{x :: Int; y::Char;}
+data Integer{numerador :: Int;}
+
+myFunc(num :: Int, ch :: Char): Int, Int{
+    b=1;
+    a=3;
+    return a, b;
+}
+
+main (){
+    var = -50 + 5;
+    j = new String;
+    k = true;
+    x = var + 10;
+    i = 'a';
+    j.x = 6;
+    print i;
+    print 200;
+    print k;
+    print j;
+    print x;
+}

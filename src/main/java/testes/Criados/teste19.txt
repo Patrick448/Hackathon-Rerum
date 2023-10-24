@@ -1,0 +1,11 @@
+print_sum(a::Int, b::Int)
+{
+    print a+b;
+}
+
+main()
+{
+    a = 1;
+    b = 3;
+    print_sum(a,b);
+}

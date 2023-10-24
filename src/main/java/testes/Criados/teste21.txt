@@ -1,0 +1,15 @@
+data Teste{numerador :: Teste; denominador :: Int;}
+
+test(a::Int, b::Int):Int,Int
+{
+    return a*b, b/a;
+}
+
+main()
+{
+    t = new Teste;
+    a = 2;
+    b = 4;
+    test(a,b)<a, t.denominador>;
+    print t.denominador;
+}

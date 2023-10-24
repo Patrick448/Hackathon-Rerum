@@ -1,0 +1,11 @@
+data Teste{x::Int;}
+
+main (){
+       t = new Teste;
+        i = new Int[10];
+        read t.x;
+        read i[5];
+        print t;
+        print i;
+        read t.y;
+}

@@ -1,0 +1,386 @@
+group jasmin;
+
+prog(name, funclist, datalist, tam) ::= <<
+.source <name>.j
+
+<datalist>
+
+.class public <name>
+.super java/lang/Object
+
+    <funclist>
+
+    .method public static main([Ljava/lang/String;)V
+        .limit stack 1
+        invokestatic <name>/_main()V
+        return
+    .end method
+>>
+
+funclist(funcs) ::= <<
+<funcs; separator="\n\n">
+>>
+
+datalist(datas) ::= <<
+<datas; separator="\n\n">
+>>
+
+data(name, declist) ::= <<
+.class public <name>
+.super java/lang/Object
+    <declist>
+.end class
+>>
+
+declist(decls) ::=<<
+<decls; separator="\n">
+>>
+
+decl(classname, type, name) ::=<<
+.field public <name> <type>
+>>
+
+paramslist(params) ::= <<
+<params; separator="">
+>>
+
+
+cmdlist(cmds) ::= <<
+<cmds; separator="\n">
+>>
+
+func(returntypes, name, paramslist, cmdlist, stack, decls) ::= <<
+.method public static <name>(<paramslist>)<returntypes>
+    .limit stack <stack>
+    .limit locals <decls>
+     iconst_0
+     istore_1
+    <cmdlist>
+    return
+.end method
+>>
+
+param(type) ::= "<type>"
+
+multiple_returns() ::= "Ljava/util/ArrayList;"
+array_type(type) ::= "[<type>"
+int_type() ::= "I"
+float_type() ::= "F"
+boolean_type() ::= "Z"
+string_type() ::= "Ljava/lang/String"
+
+iload(expr) ::= << iload <expr> >>
+
+fload(expr) ::= << fload <expr> >>
+
+aload(expr) ::= << aload <expr> >>
+
+print(expr, type) ::= <<
+getstatic java/lang/System/out Ljava/io/PrintStream;
+<expr>
+invokevirtual java/io/PrintStream/print(Ljava/lang/Object;)V
+>>
+
+invocateScannerint(num) ::= <<
+invokevirtual java/util/Scanner/nextInt()I
+istore <num>
+>>
+
+invocateScannerfloat(num) ::= <<
+invokevirtual java/util/Scanner/nextFloat()F"
+fstore <num>
+>>
+
+invocateScannerLine(num) ::= <<
+invokevirtual java/util/Scanner/nextLine()Ljava/lang/String
+astore <num>
+>>
+
+return(expr) ::= "areturn <expr>;"
+
+read(scanner) ::= <<
+new java/util/Scanner
+dup
+getstatic java/lang/System/in Ljava/io/InputStream;
+invokespecial java/util/Scanner/\<init>(Ljava/io/InputStream;)V
+astore_2
+aload_2
+<scanner>
+>>
+
+iterate(expr, cmdlist, unique_id) ::= <<
+iload 1
+<expr>
+pop
+iload_0
+istore_1
+
+#WHILE<unique_id>:
+    iload_1
+    ifne #THEN<unique_id>
+    goto #ENDWHILE<unique_id>
+    #THEN<unique_id>:
+        <cmdlist>
+        iload_1
+        iconst_1
+        isub
+        istore_1
+        goto #WHILE<unique_id>
+#ENDWHILE<unique_id>:
+   istore_1
+>>
+
+if(unique_id, expr, thn, els) ::= <<
+<expr>
+iconst_1
+if_icmpeq #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
+    <thn>
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
+    <els>
+#ENDIF<unique_id>:
+>>
+
+stmt_list(stmt1, stmt2) ::= <<
+<stmt1>
+<stmt2>
+>>
+
+attrint(num, expr) ::= <<
+<expr>
+<!checkcast java/lang/Integer
+invokevirtual java/lang/Integer/intValue()I!>
+istore <num>
+>>
+
+attrfloat(num, expr) ::= <<
+<expr>
+<!checkcast java/lang/Float
+invokevirtual java/lang/Float/floatValue()F!>
+fstore <num>
+>>
+
+attrobj(num, expr) ::= <<
+<expr> 
+astore <num>
+>>
+
+lvalue(lvalue, expr) ::= "<lvalue><if(expr)>.get(<expr>)<endif>"
+lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
+
+boolean_expr(value) ::= <<
+iconst_value
+istore_0
+iload_0
+>>
+
+float_expr(value) ::= <<
+ldc <value>
+fstore_0
+fload_0
+>>
+
+int_expr(value) ::= <<
+ldc <value>
+istore_0
+iload_0
+>>
+
+char_expr(value) ::= <<
+ldc <value>
+astore_0
+aload_0
+>>
+
+new_array(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
+new_object(type) ::= "new <type>()"
+array(type) ::= "ArrayList\<<type>>"
+
+attrReturn(num, prefix, expr, type) ::= <<
+aload_0 
+ldc <expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+<prefix>store_num
+>>
+
+call(filename, name, args, return, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)V
+<return; separator="\n">
+>>
+
+callvet(filename, name, args, expr, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)Ljava/util/ArrayList;
+<expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+>>
+
+callvet_int(filename, name, args, expr, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)Ljava/util/ArrayList;
+<expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+checkcast java/lang/Integer
+invokevirtual java/lang/Integer/intValue()I
+>>
+
+callvet_float(filename, name, args, expr, params) ::= <<
+<args; separator="\n">
+invokestatic <filename>/<name>(<params; separator="">)Ljava/util/ArrayList;
+<expr>
+invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;
+checkcast java/lang/Float
+invokevirtual java/lang/Float/floatValue()F
+>>
+
+convert_int(expr) ::= <<
+<expr>
+invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+>>
+
+convert_float(expr) ::= <<
+<expr>
+invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;
+>>
+
+do_not_convert(expr) ::= <<
+<expr>
+>>
+
+return_add_to_array_int(expr) ::= <<
+aload_2
+<expr>
+invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z
+pop
+>>
+
+return_add_to_array_float(expr) ::= <<
+aload_2
+<expr>
+invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;
+invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z
+pop
+>>
+
+
+return_add_to_array(expr) ::= <<
+aload_2
+<expr>
+invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z
+pop
+>>
+
+return_cmd(returnslist) ::= <<
+new java/util/ArrayList
+dup
+invokespecial java/util/ArrayList/\<init>()V
+astore_2
+<returnslist; separator="\n">
+aload_2
+areturn
+>>
+
+
+mul_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>mul
+<prefix>store_0
+<prefix>load_0
+>>
+
+div_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>div
+<prefix>store_0
+<prefix>load_0
+>>
+
+mod_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>rem
+<prefix>store_0
+<prefix>load_0
+>>
+
+add_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>add
+<prefix>store_0
+<prefix>load_0
+>>
+
+sub_expr(prefix, left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+<prefix>sub
+<prefix>store_0
+<prefix>load_0
+>>
+
+sub_uni_expr(prefix, expr) ::= <<
+<prefix>const_0
+<expr>
+<prefix>sub
+<prefix>store_0
+<prefix>load_0
+>>
+
+comparison(unique_id, left_expr, right_expr, name) ::= <<
+<left_expr>
+<right_expr>
+<name> #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
+    iconst_1
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
+    iconst_0
+#ENDIF<unique_id>:
+>>
+
+lt_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmplt")>
+>>
+
+gt_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpgt")>
+>>
+
+equals_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpeq")>
+>>
+
+diff_expr(unique_id, left_expr, right_expr) ::= <<
+<comparison(unique_id, left_expr, right_expr, "if_icmpne")>
+>>
+
+
+and_expr(left_expr, right_expr) ::= <<
+<left_expr>
+<right_expr>
+imul
+>>
+
+not_expr(unique_id, expr) ::=<<
+<expr>
+iconst_1
+if_icmpeq #THEN<unique_id>
+goto #ELSE<unique_id>
+#THEN<unique_id>:
+    iconst_0
+    goto #ENDIF<unique_id>
+#ELSE<unique_id>:
+    iconst_1
+#ENDIF<unique_id>:
+>>
+
+push_stack(value) ::= "ldc <value>"
+iconst(value) ::= "iconst_<value>"

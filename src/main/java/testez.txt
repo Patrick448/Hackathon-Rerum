@@ -1,0 +1,24 @@
+func(): Float, Int{
+print 2;
+return 1.5,8;
+}
+
+func2(){
+print 333;
+}
+
+main(){
+func2();
+a = 1;
+b = 5+1;
+print a;
+x= func()[0];
+print x;
+print func()[1];
+iterate(2){
+    print 0;
+    iterate(3){
+        print 1;
+    }
+  }
+}

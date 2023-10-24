@@ -1,0 +1,199 @@
+group java;
+
+prog(name, funclist, datalist) ::= <<
+import java.util.List;
+import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+<datalist>
+
+public class <name> {
+
+    public static Scanner input = new Scanner(System.in);
+    <funclist>
+
+
+    public static Object read_func (String type, int col, int line)
+    {
+        Object readObject = null;
+        String read = input.nextLine();
+
+        if(type.equals("Bool")){
+            try{
+                readObject = (String)read;
+                if(!readObject.equals("true")&&!readObject.equals("false"))
+                {
+                    System.out.println("Error at line " + line + ":" +  col+ ": Unable to convert read value to "+ type);
+                    System.exit(0);
+                }
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+
+        }else if(type.equals("Int")){
+            try{
+                readObject = Integer.parseInt(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else if(type.equals("Float")){
+            try{
+                readObject = Float.parseFloat(read);
+            }catch(Exception e){
+                System.out.println("Error at line " + line + ":" + col + ": Unable to convert read value to "+ type);
+                System.exit(0);
+            }
+        }else{
+            readObject = (String)read.substring(0,1);
+        }
+        return readObject;
+    }
+
+    public static \<T> ArrayList\<T> initialize(int n, ArrayList\<T> a){
+            for(int j=0; j\<n; j++){
+                a.add(null);
+            }
+            return a;
+    }
+
+    public static void main(String args[]) {
+        _main();
+    }
+}
+>>
+
+
+funclist(funcs) ::= <<
+<funcs; separator="\n\n">
+>>
+
+datalist(datas) ::= <<
+<datas; separator="\n\n">
+>>
+
+data(name, declist) ::= <<
+class <name>{
+    <declist>
+}
+>>
+
+declist(decls) ::=<<
+<decls; separator="\n">
+>>
+
+decl(type, name) ::=<<
+public <type> <name>;
+>>
+
+var_decl(type, name) ::=<<
+<type> <name>;
+>>
+
+paramslist(params) ::= <<
+<params; separator=", ">
+>>
+
+
+cmdlist(cmds, variables) ::= <<
+<variables; separator="\n">
+<cmds; separator="\n">
+>>
+
+func(returntypes, name, paramslist, cmdlist) ::= <<
+public static <returntypes> <name>(<paramslist>)
+{
+    <cmdlist>
+}
+>>
+
+func2(type, name, params, decl, stmt) ::= <<
+static <type> <name>(<params; separator=", ">)
+    <if(decl)><decl; separator=";\n">;<endif>
+    <stmt>
+>>
+
+return_add_to_array(expr) ::= "arr.add(<expr>);"
+
+return_cmd(returnslist) ::= <<
+List\<Object> arr = new ArrayList\<Object>();
+<returnslist; separator="\n">
+return arr;
+>>
+
+param(type, id) ::= "<type> <id>"
+multiple_returns() ::= "List\<Object>"
+array_type(type) ::= "<type>[]"
+int_type() ::= "Integer"
+float_type() ::= "Float"
+boolean_type() ::= "Boolean"
+string_type() ::= "String"
+
+print(expr) ::= "System.out.print(<expr>);"
+return(expr) ::= "return <expr>;"
+
+
+read(lvalue, type, javaType, col, line) ::= <<
+<lvalue> = (<javaType>)read_func("<type>",<col>,<line>);
+>>
+
+iterate(expr, cmdlist, unique_id) ::= <<
+int cont<unique_id> =0;
+while(cont<unique_id> \< <expr>){
+    <cmdlist>
+    cont<unique_id>++;
+}
+>>
+
+if(expr, thn, els) ::= <<
+if(<expr>) {
+    <thn>
+} <if(els)>else {
+    <els>
+}
+<endif>
+>>
+
+stmt_list(stmt1, stmt2) ::= <<
+<stmt1>
+<stmt2>
+>>
+
+attr(id, expr, type) ::= "<id> = <if(type)>(<type>)<endif><expr>;"
+lvalue(lvalue, expr) ::= "<lvalue><if(expr)>[<expr>]<endif>"
+lvalue_attribute(lvalue, attr) ::= "<lvalue>.<attr>"
+
+boolean_expr(value) ::= "<value>"
+float_expr(value) ::= "<value>"
+int_expr(value) ::= "<value>"
+
+new_array2(type, expr) ::= "initialize(<expr>,new ArrayList\<<type>>(<expr>))"
+new_array(type, expr, dimension) ::= "new <type>[<expr>]<if(dimension)><dimension><endif>"
+new_object(type) ::= "new <type>()"
+array(type) ::= "<type>[]"
+
+call(name, args, return) ::= <<
+<if(return)>List\<Object> arr = new ArrayList\<Object>();<endif>
+<if(return)>arr =<endif><name>(<args; separator=", ">);
+<if(return)><return; separator="\n"><endif>
+>>
+
+callvet(name, args, expr, type) ::= <<(<type>)<name>(<args; separator=", ">).get(<expr>)>>
+
+attrReturn(name, expr, type) ::= << <name> = (<type>)arr.get(<expr>);>>
+
+mul_expr(left_expr, right_expr) ::= "(<left_expr> * <right_expr>)"
+div_expr(left_expr, right_expr) ::= "(<left_expr> / <right_expr>)"
+mod_expr(left_expr, right_expr) ::= "(<left_expr> % <right_expr>)"
+add_expr(left_expr, right_expr) ::= "(<left_expr> + <right_expr>)"
+sub_expr(left_expr, right_expr) ::= "(<left_expr> - <right_expr>)"
+
+lt_expr(left_expr, right_expr) ::= "(<left_expr> \< <right_expr>)"
+gt_expr(left_expr, right_expr) ::= "(<left_expr> > <right_expr>)"
+equals_expr(left_expr, right_expr) ::= "(<left_expr> == <right_expr>)"
+diff_expr(left_expr, right_expr) ::= "(<left_expr> != <right_expr>)"
+and_expr(left_expr, right_expr) ::= "(<left_expr> && <right_expr>)"
+not_expr(expr) ::= "!<expr>"
+sub_uni_expr(expr) ::= "-<expr>"

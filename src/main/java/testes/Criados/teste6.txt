@@ -1,0 +1,19 @@
+main (){
+    print 1 + 2;
+    iterate(2){
+        print 'b';
+        if(true){
+            print 'x';
+        }
+    }
+
+    if(!(-5<0)){
+            print 'z';
+        }
+
+  
+}
+
+
+
+

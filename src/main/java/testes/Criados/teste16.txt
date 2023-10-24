@@ -1,0 +1,21 @@
+data Racional{numerador :: Int; denominador :: Int;}
+
+main(r :: Racional): Int{
+    if(r.numerador>r.denominador)
+    {
+        res = r.numerador / r.denominador;
+        return res;
+    }
+}
+
+main(i :: Int): Int{
+    res = i / 4;
+    return res;
+}
+
+main (){
+    r = new Racional;
+    r.numerador = 4;  
+    r.denominador = 2;
+    print main(r.numerador)[0];
+}

@@ -1,0 +1,23 @@
+data Teste{numerador :: Teste; denominador :: Int;}
+
+main (){
+    r = new Teste;
+    r.numerador = new Teste;
+    r.numerador.denominador = 35;
+
+   
+
+    s = new Teste[3];
+
+    s[0] = r;
+    print s;
+    print '\n';
+    print s[0];
+    print '\n';
+    print s[0].numerador;
+    print '\n';
+    print s[0].numerador.numerador;
+    print '\n';
+}
+
+
