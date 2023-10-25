@@ -2,6 +2,9 @@ group java;
 
 
 prog(classList) ::= <<
+
+package generatedodl;
+
 <classList>
 >>
 
@@ -10,8 +13,12 @@ classList(classes) ::= <<
 >>
 
 class(name, declist) ::= <<
-class <name>{
+public class <name>{
     <declist>
+
+    public void print(){
+        System.out.println("Hello World");
+    }
 }
 >>
 

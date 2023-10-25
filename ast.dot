@@ -1,12 +1,12 @@
 graph program {
-29 [label=Prog]
-29--21
-21 [label=ClassList]
-21--20
-20 [label= "ClassAst"]
-20--19
-19 [label="Type<C>"]
-20--3
+20 [label=Prog]
+20--18
+18 [label=ClassList]
+18--17
+17 [label= "ClassAst"]
+17--16
+16 [label="Type<C>"]
+17--3
 3 [label=DeclList]
 3--2
 2 [label="Decl"]
@@ -38,22 +38,4 @@ graph program {
 14 [label="ID<d>"]
 15--13
 13 [label="Type<double>"]
-3--18
-18 [label="Decl"]
-18--17
-17 [label="ID<o>"]
-18--16
-16 [label="Type<oid>"]
-21--28
-28 [label= "ClassAst"]
-28--27
-27 [label="Type<C2>"]
-28--26
-26 [label=DeclList]
-26--25
-25 [label="Decl"]
-25--24
-24 [label="ID<baaaa>"]
-25--23
-23 [label="Type<C>"]
 }

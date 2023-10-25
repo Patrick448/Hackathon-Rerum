@@ -1,15 +1,14 @@
+import com.javax0.sourcebuddy.Compiler;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.Vocabulary;
 
 import java.io.*;
 
 import odlAst.*;
 import visitors.*;
 
-import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Scanner;
 
 
 public class LangCompiler {
@@ -84,6 +83,39 @@ public class LangCompiler {
 	}*/
 
 
+	public static String readFile(String filename){
+		String content = "";
+		try {
+			File file = new File(filename);
+			Scanner myReader = new Scanner(file);
+			while (myReader.hasNextLine()) {
+				content += myReader.nextLine();
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+
+		return content;
+	}
+
+
+	public static Class<?> loadClass(String fileName) throws Compiler.CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+		String source = readFile(fileName);
+
+		Class<?> loadedClass = com.javax0.sourcebuddy.Compiler.compile(source);
+
+		return loadedClass;
+	}
+
+	public static void runMethod(Class<?> c, String methodName) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+		Object obj = c.getConstructor().newInstance();
+		Method thisMethod = c.getDeclaredMethod(methodName);
+		thisMethod.invoke(obj);
+	}
+
 
 	public static void main(String args[]) throws Exception {
 
@@ -99,8 +131,11 @@ public class LangCompiler {
 
 			if(args[1].equals("-i")){
 				//ast.tryInterpret(null, null, null, null, scope);
+
 			}
 			else if(args[1].equals("-w")){
+				Class<?> c = loadClass("output/output.java");
+				runMethod(c, "print");
 				//ast.tryInterpret(null, null, null, null, scope);
 				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
 				ast.accept(javaGenODLVisitor);

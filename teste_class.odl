@@ -5,9 +5,5 @@ class C {
   //attribute int i;
   attribute long l;
   attribute double d;
-  attribute oid o;
-};
-
-class C2 {
-  attribute C baaaa;
+  //attribute oid o;
 };
