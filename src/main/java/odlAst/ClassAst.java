@@ -16,11 +16,15 @@ public class ClassAst extends Node {
 
     private Type id;
     private DeclList declList;
+    private Type extended;
 
-    public ClassAst(int l, int c, Type id, DeclList declList) {
+    public ClassAst(int l, int c, Type id, Type extended, DeclList declList) {
         super(l, c);
         this.id = id;
         this.declList = declList;
+        if(extended != null) {
+            this.extended = extended;
+        }
     }
 
     public Type getId() {
@@ -36,6 +40,14 @@ public class ClassAst extends Node {
         return 0;
     }*/
 
+    public Type getExtended() {
+        return extended;
+    }
+
+    public void setExtended(Type extended) {
+        this.extended = extended;
+    }
+
     public String dotString(){
         String s = getUid() + " [label= \""+this.getClass().getSimpleName()+"\"]\n";
         s+= getUid() +"--"+id.getUid()+"\n";
@@ -44,6 +56,11 @@ public class ClassAst extends Node {
         if(declList != null){
             s+= getUid() +"--"+declList.getUid()+"\n";
             s+=declList.dotString();
+        }
+
+        if(extended != null){
+            s+= getUid() +"--"+extended.getUid()+"\n";
+            s+=extended.dotString();
         }
 
 

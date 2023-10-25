@@ -47,7 +47,15 @@ classList returns [ClassList ast]:
 
 
 class returns [ClassAst ast]:
-  kw='class' TYPE '{' declList '};' { $ast = new ClassAst($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), $declList.ast);}
+{boolean hasExtends = false;}
+
+  kw='class' TYPE (('extends' t=TYPE ){hasExtends = true;})? '{' declList '};' {
+   if(hasExtends){
+        $ast = new ClassAst($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), new Type($t.line, $t.pos, $t.text), $declList.ast);
+   }else{
+       $ast = new ClassAst($kw.line, $kw.pos, new Type($TYPE.line, $TYPE.pos, $TYPE.text), null, $declList.ast);
+    }
+  }
 ;
 
 
@@ -71,8 +79,6 @@ type returns [Type ast]:
   |
   ( t='byte'  | t='char'  | t='float'  | t='short' | t='int' | t='long' | t='double' |  t='oid' | t='enum'    | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
 ;
-
-
 
 ID : [a-z] ([a-z]|[A-Z]|[0-9]|'_')*;
 INT : [0-9]+;

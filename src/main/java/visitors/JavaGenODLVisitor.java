@@ -16,6 +16,9 @@ public class JavaGenODLVisitor extends ODLVisitor{
     private STGroup groupTemplate;
     private String generatedCode;
 
+    private List<String> classSources = new ArrayList<>();
+    private List<String> classNames= new ArrayList<>();
+
 
     public JavaGenODLVisitor(){
         groupTemplate = new STGroupFile("template/odl.stg");
@@ -37,6 +40,18 @@ public class JavaGenODLVisitor extends ODLVisitor{
         return generatedCode;
     }
 
+    public List<String> getClassSources() {
+        return classSources;
+    }
+
+    public List<String> getClassNames() {
+        return classNames;
+    }
+
+    public Stack<ST> getCodeStack() {
+        return codeStack;
+    }
+
     @Override
     public void visit(ODLProg p) {
         ST template = groupTemplate.getInstanceOf("prog");
@@ -55,13 +70,22 @@ public class JavaGenODLVisitor extends ODLVisitor{
     public void visit(ClassAst a) {
         ST template = groupTemplate.getInstanceOf("class");
         a.getId().accept(this);
+
         if(a.getDeclList()!=null)
         {
             a.getDeclList().accept(this);
             template.add("declist", codeStack.pop());
         }
+
+        if(a.getExtended() != null){
+            a.getExtended().accept(this);
+            template.add("extends", codeStack.pop());
+        }
+
         template.add("name", codeStack.pop());
 
+        classSources.add(template.render());
+        classNames.add(a.getId().getName());
         codeStack.push(template);
 
     }
@@ -105,8 +129,14 @@ public class JavaGenODLVisitor extends ODLVisitor{
 
     @Override
     public void visit(Type t) {
-        ST template = groupTemplate.getInstanceOf("raw_text");
-        template.add("text", t.getName());
+        ST template;
+
+        if(t.getName().equals("oid")){
+            template = groupTemplate.getInstanceOf("oid");
+        }else{
+            template = groupTemplate.getInstanceOf("raw_text");
+        }
+        template.add("value", t.getName());
         codeStack.push(template);
 
     }
@@ -114,7 +144,7 @@ public class JavaGenODLVisitor extends ODLVisitor{
     @Override
     public void visit(ID i) {
         ST template = groupTemplate.getInstanceOf("raw_text");
-        template.add("text", i.getName());
+        template.add("value", i.getName());
         codeStack.push(template);
     }
 }

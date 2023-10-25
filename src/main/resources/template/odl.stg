@@ -2,9 +2,6 @@ group java;
 
 
 prog(classList) ::= <<
-
-package generatedodl;
-
 <classList>
 >>
 
@@ -12,13 +9,39 @@ classList(classes) ::= <<
 <classes; separator="\n\n">
 >>
 
-class(name, declist) ::= <<
-public class <name>{
+class(name, declist, extends) ::= <<
+
+package generatedodl;
+
+import java.lang.String;
+import java.lang.reflect.Field;
+import orm.*;
+
+public class <name>  <if(extends)> extends <extends> <endif> implements Entity{
     <declist>
 
     public void print(){
-        System.out.println("Hello World");
+        System.out.println("Hello <name>");
     }
+
+     @Override
+     public Object getAttr(String attrName) throws NoSuchFieldException, IllegalAccessException{
+          Field f = this.getClass().getDeclaredField(attrName);
+          f.setAccessible(true);
+          Object value = (Object) f.get(this);
+          return value;
+      }
+        @Override
+       public void setAttr(String attrName, Object value) throws NoSuchFieldException, IllegalAccessException{
+            Field f = this.getClass().getDeclaredField(attrName);
+            f.setAccessible(true);
+            f.set(this, value);
+        }
+
+        @Override
+        public void create(Object connection){
+
+        }
 }
 >>
 
@@ -26,12 +49,24 @@ declist(decls) ::= <<
 <decls; separator="\n">
 >>
 
+getAttrList(decls) ::= <<
+<getAttr; separator="\n">
+>>
+
+getAttr(type, name) ::= <<
+
+
+
+>>
+
 decl(type, name) ::= <<
 public <type> <name>;
 >>
 
-raw_text(text) ::= <<
-<text>
+raw_text(value) ::= <<
+<value>
 >>
+
+oid(value) ::= "long"
 
 

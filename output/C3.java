@@ -5,17 +5,11 @@ import java.lang.String;
 import java.lang.reflect.Field;
 import orm.*;
 
-public class C   implements Entity{
-    public byte b;
-    public char c;
-    public short s;
+public class C3   extends C2  implements Entity{
     public int i;
-    public long l;
-    public double d;
-    public long o;
 
     public void print(){
-        System.out.println("Hello C");
+        System.out.println("Hello C3");
     }
 
      @Override

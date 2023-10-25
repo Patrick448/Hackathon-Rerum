@@ -5,11 +5,13 @@ import org.antlr.v4.runtime.*;
 import java.io.*;
 
 import odlAst.*;
+import orm.Entity;
 import visitors.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -116,35 +118,19 @@ public class LangCompiler {
 		thisMethod.invoke(obj);
 	}
 
-	public static void test(String[] classes, String dir) throws IOException, ClassNotFoundException, Compiler.CompileException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		String sourceFirstClass = """
-         package com.sb.demo;
- 
-          public class FirstClass {
-              public String a() {
-                  return "x";
-            }
-          }""";
+	public static Fluent.Compiled compileClasses(List<String> classes, String dir) throws IOException, ClassNotFoundException, Compiler.CompileException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
+		Fluent.CanCompile canCompile = Compiler.java()
+				.from(Paths.get(dir +"/"+ classes.get(0) + ".java"));
 
-		String source = readFile("output/C.java");
+		for(int i = 1; i < classes.size(); i++){
+			canCompile = canCompile.from(Paths.get(dir +"/"+ classes.get(i) + ".java"));
+		}
 
-
-		final var compiled = Compiler.java()
-				.from(Paths.get("output/C.java"))
-				.from(Paths.get("output/C2.java"))
-				.compile();
+		Fluent.Compiled compiled = canCompile.compile();
 
 		 compiled.saveTo(Paths.get("./target/generated_classes"));
-		 compiled.stream().forEach(bc -> System.out.println(Compiler.getBinaryName(bc)));
-		 final var loaded = compiled.load();
-		 Class<?> objClass = loaded.get("generatedodl.C");
-		 Object obj = loaded.newInstance("generatedodl.C");
-		 //loaded.stream().forEach(klass -> System.out.println(klass.getSimpleName()));
-		 final var compiler = loaded.reset();
-		 final var sameCompiler = compiled.reset();
-		Method thisMethod = objClass.getDeclaredMethod("print");
-		thisMethod.invoke(obj);
+
 
 		/*String sourceFirstClass = """
           package com.sb.demo;
@@ -167,6 +153,8 @@ public class LangCompiler {
 		 final var compiler = loaded.reset();
 		 final var sameCompiler = compiled.reset();*/
 
+		return compiled;
+
 	}
 
 
@@ -187,20 +175,28 @@ public class LangCompiler {
 
 			}
 			else if(args[1].equals("-w")){
-				test(null, null);
-
-				//Class<?> c = loadClass("output/C2.java");
-				//runMethod(c, "print");
-				//ast.tryInterpret(null, null, null, null, scope);
-
-
-				/*JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
+				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
 				ast.accept(javaGenODLVisitor);
-				String javaCode = javaGenODLVisitor.getGeneratedCode();
-				String fileName = "output";
-				String outputPath = "output/" + fileName + ".java";
-				writeToFile(outputPath, javaCode);*/
+				String outputDir = "output";
+
+				List<String> classSources = javaGenODLVisitor.getClassSources();
+				List<String> classNames = javaGenODLVisitor.getClassNames();
+
+				for(int i = 0; i < classSources.size(); i++){
+					writeToFile(outputDir+"/" + classNames.get(i) + ".java", classSources.get(i));
+				}
+
+				Fluent.Compiled compiled = compileClasses(classNames, "output");
+
+				final var loaded = compiled.load();
+				Class<?> objClass = loaded.get("generatedodl.C");
+				Entity obj = (Entity)loaded.newInstance("generatedodl.C");
+				Method thisMethod = objClass.getDeclaredMethod("print");
+				obj.setAttr("i", 13);
+				System.out.println((obj.getAttr("i")));
+				thisMethod.invoke(obj);
 			}
+
 			else if(args[1].equals("-s")){
 				String[] splitName = args[0].split("/");
 				String fileName = splitName[splitName.length-1];
