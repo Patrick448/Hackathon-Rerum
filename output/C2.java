@@ -4,6 +4,7 @@ package generatedodl;
 import java.lang.String;
 import java.lang.reflect.Field;
 import orm.*;
+import java.sql.*;
 
 public class C2   implements Entity{
     public C c;
@@ -27,7 +28,9 @@ public class C2   implements Entity{
         }
 
         @Override
-        public void create(Object connection){
-
+        public void create(Connection connection) throws SQLException{
+            		Statement st = connection.createStatement();
+            		st.executeUpdate("CREATE TABLE C2 (c C)");
+            		st.close();
         }
 }

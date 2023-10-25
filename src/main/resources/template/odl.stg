@@ -9,13 +9,14 @@ classList(classes) ::= <<
 <classes; separator="\n\n">
 >>
 
-class(name, declist, extends) ::= <<
+class(name, declist, extends, sqlcode) ::= <<
 
 package generatedodl;
 
 import java.lang.String;
 import java.lang.reflect.Field;
 import orm.*;
+import java.sql.*;
 
 public class <name>  <if(extends)> extends <extends> <endif> implements Entity{
     <declist>
@@ -39,25 +40,31 @@ public class <name>  <if(extends)> extends <extends> <endif> implements Entity{
         }
 
         @Override
-        public void create(Object connection){
-
+        public void create(Connection connection) throws SQLException{
+            		Statement st = connection.createStatement();
+            		st.executeUpdate("<sqlcode>");
+            		st.close();
         }
 }
+>>
+
+sql_decl(type, name) ::= <<
+<name> <java_to_sql_type(type)>
+>>
+
+java_to_sql_type(type) ::= <<
+<type>
+>>
+
+sql_table_declist(decls) ::= <<
+user_id serial PRIMARY KEY
 >>
 
 declist(decls) ::= <<
 <decls; separator="\n">
 >>
 
-getAttrList(decls) ::= <<
-<getAttr; separator="\n">
->>
 
-getAttr(type, name) ::= <<
-
-
-
->>
 
 decl(type, name) ::= <<
 public <type> <name>;

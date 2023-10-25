@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class JavaGenODLVisitor extends ODLVisitor{
+public class SQLGenODLVisitor extends ODLVisitor{
 
     private Stack<ST> codeStack = new Stack<>();
     private STGroup groupTemplate;
@@ -18,11 +18,10 @@ public class JavaGenODLVisitor extends ODLVisitor{
 
     private List<String> classSources = new ArrayList<>();
     private List<String> classNames= new ArrayList<>();
-    private SQLGenODLVisitor sqlGenODLVisitor;
 
-    public JavaGenODLVisitor(SQLGenODLVisitor sqlGenODLVisitor){
-        groupTemplate = new STGroupFile("template/odl.stg");
-        this.sqlGenODLVisitor = sqlGenODLVisitor;
+
+    public SQLGenODLVisitor(){
+        groupTemplate = new STGroupFile("template/sql.stg");
     }
 
     private InputStream getFileAsIOStream(final String fileName)
@@ -35,6 +34,10 @@ public class JavaGenODLVisitor extends ODLVisitor{
             throw new IllegalArgumentException(fileName + " is not found");
         }
         return ioStream;
+    }
+
+    public String popStack(){
+        return codeStack.pop().render();
     }
 
     public String getGeneratedCode() {
@@ -67,15 +70,10 @@ public class JavaGenODLVisitor extends ODLVisitor{
        // this.generatedCode = "ssssss";
     }
 
-
-
     @Override
     public void visit(ClassAst a) {
         ST template = groupTemplate.getInstanceOf("class");
         a.getId().accept(this);
-
-        this.sqlGenODLVisitor.visit(a);
-        String sqlCode = this.sqlGenODLVisitor.popStack();
 
         if(a.getDeclList()!=null)
         {
@@ -89,7 +87,6 @@ public class JavaGenODLVisitor extends ODLVisitor{
         }
 
         template.add("name", codeStack.pop());
-        template.add("sqlcode", sqlCode);
 
         classSources.add(template.render());
         classNames.add(a.getId().getName());
@@ -140,10 +137,22 @@ public class JavaGenODLVisitor extends ODLVisitor{
 
         if(t.getName().equals("oid")){
             template = groupTemplate.getInstanceOf("oid");
-        }else{
-            template = groupTemplate.getInstanceOf("raw_text");
+        }else if(t.getName().equals("byte")) {
+            template = groupTemplate.getInstanceOf("byte");
+        }else if(t.getName().equals("char")) {
+            template = groupTemplate.getInstanceOf("char");
+        }else if(t.getName().equals("short")) {
+            template = groupTemplate.getInstanceOf("short");
+        }else if(t.getName().equals("int")) {
+            template = groupTemplate.getInstanceOf("int");
+        }else if(t.getName().equals("long")) {
+            template = groupTemplate.getInstanceOf("long");
+        }else if(t.getName().equals("double")) {
+            template = groupTemplate.getInstanceOf("double");
         }
-        template.add("value", t.getName());
+        else {
+            template = new ST(t.getName());
+        }
         codeStack.push(template);
 
     }

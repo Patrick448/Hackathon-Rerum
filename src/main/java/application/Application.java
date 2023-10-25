@@ -128,7 +128,7 @@ public class Application {
     public static void main(String args[]) throws Exception {
         SpringApplication.run(Application.class, args);
 
-        odlParser parser = parseFile("teste_class.odl");
+       /* odlParser parser = parseFile("teste_class.odl");
         Node ast = getAST(parser);
         writeToFile("ast.dot", ast.dotString());
 
@@ -151,7 +151,7 @@ public class Application {
         Method thisMethod = objClass.getDeclaredMethod("print");
         obj.setAttr("i", 13);
         System.out.println((obj.getAttr("i")));
-        thisMethod.invoke(obj);
+        thisMethod.invoke(obj);*/
 
         }
 

@@ -4,6 +4,7 @@ package generatedodl;
 import java.lang.String;
 import java.lang.reflect.Field;
 import orm.*;
+import java.sql.*;
 
 public class C   implements Entity{
     public byte b;
@@ -33,7 +34,9 @@ public class C   implements Entity{
         }
 
         @Override
-        public void create(Object connection){
-
+        public void create(Connection connection) throws SQLException{
+            		Statement st = connection.createStatement();
+            		st.executeUpdate("CREATE TABLE C (b bit(8),c char(1),s smallint,i integer,l bigint,d double precision,o serial PRIMARY KEY)");
+            		st.close();
         }
 }

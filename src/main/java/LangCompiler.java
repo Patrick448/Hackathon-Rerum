@@ -167,7 +167,7 @@ public class LangCompiler {
 		props.setProperty("password", "1234");
 		Connection conn = DriverManager.getConnection(url, props);
 
-		Statement st = conn.createStatement();
+		/*Statement st = conn.createStatement();
 		st.executeQuery("CREATE TABLE accounts (\n" +
 				"\tuser_id serial PRIMARY KEY,\n" +
 				"\tusername VARCHAR ( 50 ) UNIQUE NOT NULL,\n" +
@@ -176,7 +176,7 @@ public class LangCompiler {
 				"\tcreated_on TIMESTAMP NOT NULL,\n" +
 				"        last_login TIMESTAMP \n" +
 				");");
-		st.close();
+		st.close();*/
 
 		if(args.length >=2){
 			if(args.length >=3 && args[2].equals("-v")){
@@ -193,7 +193,9 @@ public class LangCompiler {
 
 			}
 			else if(args[1].equals("-w")){
-				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
+				SQLGenODLVisitor sqlGenODLVisitor = new SQLGenODLVisitor();
+
+				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor(sqlGenODLVisitor);
 				ast.accept(javaGenODLVisitor);
 				String outputDir = "output";
 
@@ -213,6 +215,7 @@ public class LangCompiler {
 				obj.setAttr("i", 13);
 				System.out.println((obj.getAttr("i")));
 				thisMethod.invoke(obj);
+				obj.create(conn);
 			}
 
 			else if(args[1].equals("-s")){

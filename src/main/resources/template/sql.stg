@@ -1,0 +1,56 @@
+group sql;
+
+
+prog(classList) ::= <<
+<classList>
+>>
+
+classList(classes) ::= <<
+<classes; separator="\n\n">
+>>
+
+class(name, declist, extends) ::= <<
+CREATE TABLE <name> (<declist>)
+>>
+
+declist(decls) ::= <<
+<decls; separator=",">
+>>
+
+decl(type, name) ::= <<
+<name> <type>
+>>
+
+oid() ::= <<
+serial PRIMARY KEY
+>>
+
+byte() ::= <<
+bit(8)
+>>
+
+char() ::= <<
+char(1)
+>>
+
+short() ::= <<
+smallint
+>>
+
+int() ::= <<
+integer
+>>
+
+long() ::= <<
+bigint
+>>
+
+double() ::= <<
+double precision
+>>
+
+raw_text(value) ::= <<
+<value>
+>>
+
+
