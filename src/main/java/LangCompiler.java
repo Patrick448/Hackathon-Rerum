@@ -3,7 +3,7 @@ import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Vocabulary;
 import java.io.FileInputStream;
 
-import ast.*;
+import odlAst.*;
 import visitors.*;
 
 import java.io.BufferedWriter;
@@ -31,15 +31,15 @@ public class LangCompiler {
 		}
 	}
 
-	public static langParser parseFile(String filename) throws IOException {
+	public static odlParser parseFile(String filename) throws IOException {
 		// Create a ANTLR CharStream from a file
 		CharStream stream = CharStreams.fromFileName(filename);
 		// create a lexer that feeds off of stream
-		langLexer lex = new langLexer(stream);
+		odlLexer lex = new odlLexer(stream);
 		// create a buffer of tokens pulled from the lexer
 		CommonTokenStream tokens = new CommonTokenStream(lex);
 		// create a parser that feeds off the tokens buffer
-		langParser parser = new langParser(tokens);
+		odlParser parser = new odlParser(tokens);
 		// tell ANTLR to does not automatically build an AST
 		parser.setBuildParseTree(false);
 
@@ -53,11 +53,11 @@ public class LangCompiler {
 		return parser;
 	}
 
-	public static Node getAST(langParser lp){
+	public static Node getAST(odlParser lp){
 		Node ast = null;
 		try
 		{
-			ast = lp.prog().ast;
+			ast = lp.odlprog().ast;
 			if(ast == null){
 				System.out.println("Error generating abstract syntax tree.");
 				System.exit(0);
@@ -71,7 +71,7 @@ public class LangCompiler {
 		return ast;
 	}
 
-	public static ScopeVisitor semanticAnalysis(Node ast){
+	/*public static ScopeVisitor semanticAnalysis(Node ast){
 		ScopeVisitor scope = new ScopeVisitor();
 		((Prog)ast).accept(scope);
 		String analise = scope.getStack().pop();
@@ -82,7 +82,7 @@ public class LangCompiler {
 			System.exit(0);
 		}
 		return scope;
-	}
+	}*/
 
 
 
@@ -93,23 +93,29 @@ public class LangCompiler {
 				System.out.println("\nFile: " + args[0]);
 			}
 			
-			langParser parser = parseFile(args[0]);
+			odlParser  parser = parseFile(args[0]);
 			Node ast = getAST(parser);
 			writeToFile("ast.dot", ast.dotString());
-			ScopeVisitor scope = semanticAnalysis(ast);
+			//ScopeVisitor scope = semanticAnalysis(ast);
 
 			if(args[1].equals("-i")){
-				ast.tryInterpret(null, null, null, null, scope);
+				//ast.tryInterpret(null, null, null, null, scope);
+			}
+			else if(args[1].equals("-w")){
+				//ast.tryInterpret(null, null, null, null, scope);
+				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
+				ast.accept(javaGenODLVisitor);
+				System.out.println(javaGenODLVisitor.getGeneratedCode());
 			}
 			else if(args[1].equals("-s")){
 				String[] splitName = args[0].split("/");
 				String fileName = splitName[splitName.length-1];
 				fileName = fileName.split("\\.")[0];
-				JavaGenVisitor javaGenVisitor = new JavaGenVisitor(scope, fileName);
-				ast.accept(javaGenVisitor);
+				//JavaGenVisitor javaGenVisitor = new JavaGenVisitor(scope, fileName);
+				//ast.accept(javaGenVisitor);
 
 				String outputPath = "JavaCodes/" + fileName + ".java";
-				writeToFile(outputPath, javaGenVisitor.getGeneratedCode());
+				//writeToFile(outputPath, javaGenVisitor.getGeneratedCode());
 			}
 			else if(args[1].equals("-j")){
 				/*String[] splitName = args[0].split("/");

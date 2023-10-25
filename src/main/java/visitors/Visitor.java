@@ -2,7 +2,7 @@ package visitors;
 
 import ast.*;
 
-public abstract  class  Visitor {
+public abstract  class  Visitor{
 
     // public abstract void visit(Node p);
 

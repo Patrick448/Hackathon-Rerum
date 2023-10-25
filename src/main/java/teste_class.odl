@@ -1,0 +1,13 @@
+class C {
+  attribute byte b;
+  attribute char c;
+  attribute short s;
+  attribute int i;
+  attribute long l;
+  attribute double d;
+  attribute oid o;
+};
+
+class C2 {
+  attribute C baaaa;
+};
