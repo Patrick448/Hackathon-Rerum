@@ -12,8 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
-
+import java.sql.*;
 
 public class LangCompiler {
 
@@ -159,6 +160,23 @@ public class LangCompiler {
 
 
 	public static void main(String args[]) throws Exception {
+
+		String url = "jdbc:postgresql://localhost:5432/postgres";
+		Properties props = new Properties();
+		props.setProperty("user", "postgres");
+		props.setProperty("password", "1234");
+		Connection conn = DriverManager.getConnection(url, props);
+
+		Statement st = conn.createStatement();
+		st.executeQuery("CREATE TABLE accounts (\n" +
+				"\tuser_id serial PRIMARY KEY,\n" +
+				"\tusername VARCHAR ( 50 ) UNIQUE NOT NULL,\n" +
+				"\tpassword VARCHAR ( 50 ) NOT NULL,\n" +
+				"\temail VARCHAR ( 255 ) UNIQUE NOT NULL,\n" +
+				"\tcreated_on TIMESTAMP NOT NULL,\n" +
+				"        last_login TIMESTAMP \n" +
+				");");
+		st.close();
 
 		if(args.length >=2){
 			if(args.length >=3 && args[2].equals("-v")){

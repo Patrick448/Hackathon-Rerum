@@ -5,12 +5,12 @@ JAVA_HOME=/home/patrick/.jdks/corretto-19.0.2 mvn package
 
 
 ## ANOTAÇÕES
-
+- [ ] Conectar no banco de dados
 -[ ] ORM
   - [ ] create
   - [ ] insert
   - [ ] update
   - [ ] delete
   - [ ] select all
--[ ] herança com extends
+-[x] herança com extends
 
