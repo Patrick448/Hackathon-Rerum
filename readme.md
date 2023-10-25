@@ -14,7 +14,7 @@ JAVA_HOME=/home/patrick/.jdks/corretto-19.0.2 mvn package
   - [ ] select all
 -[x] herança com extends
 
-- byte	(1-byte integer) -> byte -> yte
+- byte	(1-byte integer) -> byte -> byte
 - char	(1-byte character) -> char -> char(1)
 - short	(2-byte integer) -> short -> smalint
 - int	(4-byte integer) -> int -> integer
