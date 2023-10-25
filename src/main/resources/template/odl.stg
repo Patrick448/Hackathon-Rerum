@@ -1,0 +1,30 @@
+group java;
+
+
+prog(classList) ::= <<
+<classList>
+>>
+
+classList(classes) ::= <<
+<classes; separator="\n\n">
+>>
+
+class(name, declist) ::= <<
+class <name>{
+    <declist>
+}
+>>
+
+declist(decls) ::= <<
+<decls; separator="\n">
+>>
+
+decl(type, name) ::= <<
+public <type> <name>;
+>>
+
+raw_text(text) ::= <<
+<text>
+>>
+
+

@@ -1,15 +1,12 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Vocabulary;
-import java.io.FileInputStream;
+
+import java.io.*;
 
 import odlAst.*;
 import visitors.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 
@@ -30,6 +27,8 @@ public class LangCompiler {
 			e.printStackTrace();
 		}
 	}
+
+
 
 	public static odlParser parseFile(String filename) throws IOException {
 		// Create a ANTLR CharStream from a file
@@ -105,7 +104,10 @@ public class LangCompiler {
 				//ast.tryInterpret(null, null, null, null, scope);
 				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
 				ast.accept(javaGenODLVisitor);
-				System.out.println(javaGenODLVisitor.getGeneratedCode());
+				String javaCode = javaGenODLVisitor.getGeneratedCode();
+				String fileName = "output";
+				String outputPath = "output/" + fileName + ".java";
+				writeToFile(outputPath, javaCode);
 			}
 			else if(args[1].equals("-s")){
 				String[] splitName = args[0].split("/");

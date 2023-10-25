@@ -5,6 +5,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -17,7 +18,19 @@ public class JavaGenODLVisitor extends ODLVisitor{
 
 
     public JavaGenODLVisitor(){
-        groupTemplate = new STGroupFile("../src/main/java/template/odl.stg");
+        groupTemplate = new STGroupFile("template/odl.stg");
+    }
+
+    private InputStream getFileAsIOStream(final String fileName)
+    {
+        InputStream ioStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream(fileName);
+
+        if (ioStream == null) {
+            throw new IllegalArgumentException(fileName + " is not found");
+        }
+        return ioStream;
     }
 
     public String getGeneratedCode() {

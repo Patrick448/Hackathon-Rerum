@@ -1,0 +1,59 @@
+graph program {
+29 [label=Prog]
+29--21
+21 [label=ClassList]
+21--20
+20 [label= "ClassAst"]
+20--19
+19 [label="Type<C>"]
+20--3
+3 [label=DeclList]
+3--2
+2 [label="Decl"]
+2--1
+1 [label="ID<b>"]
+2--0
+0 [label="Type<byte>"]
+3--6
+6 [label="Decl"]
+6--5
+5 [label="ID<c>"]
+6--4
+4 [label="Type<char>"]
+3--9
+9 [label="Decl"]
+9--8
+8 [label="ID<s>"]
+9--7
+7 [label="Type<short>"]
+3--12
+12 [label="Decl"]
+12--11
+11 [label="ID<l>"]
+12--10
+10 [label="Type<long>"]
+3--15
+15 [label="Decl"]
+15--14
+14 [label="ID<d>"]
+15--13
+13 [label="Type<double>"]
+3--18
+18 [label="Decl"]
+18--17
+17 [label="ID<o>"]
+18--16
+16 [label="Type<oid>"]
+21--28
+28 [label= "ClassAst"]
+28--27
+27 [label="Type<C2>"]
+28--26
+26 [label=DeclList]
+26--25
+25 [label="Decl"]
+25--24
+24 [label="ID<baaaa>"]
+25--23
+23 [label="Type<C>"]
+}

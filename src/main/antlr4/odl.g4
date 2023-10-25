@@ -87,6 +87,6 @@ CHAR : ('\'' '\\n' '\'')
     ;
 TYPE: [A-Z]([a-z]|[A-Z]|[0-9]|'_')*;
 NEWLINE: '\r'? '\n' -> skip;
-LINE_COMMENT: '--' ~('\r' | '\n')* NEWLINE -> skip;
-COMMENT: '{-' (.)* '-}' -> skip;
+LINE_COMMENT: '//' ~('\r' | '\n')* NEWLINE -> skip;
+COMMENT: '/*' (.)* '*/' -> skip;
 BLANK: (' ' | '\f' | '\t') -> skip;
