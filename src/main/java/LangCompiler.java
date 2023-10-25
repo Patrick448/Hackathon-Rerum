@@ -1,4 +1,5 @@
 import com.javax0.sourcebuddy.Compiler;
+import com.javax0.sourcebuddy.Fluent;
 import org.antlr.v4.runtime.*;
 
 import java.io.*;
@@ -8,6 +9,7 @@ import visitors.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 
@@ -104,9 +106,7 @@ public class LangCompiler {
 	public static Class<?> loadClass(String fileName) throws Compiler.CompileException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
 		String source = readFile(fileName);
-
 		Class<?> loadedClass = com.javax0.sourcebuddy.Compiler.compile(source);
-
 		return loadedClass;
 	}
 
@@ -114,6 +114,59 @@ public class LangCompiler {
 		Object obj = c.getConstructor().newInstance();
 		Method thisMethod = c.getDeclaredMethod(methodName);
 		thisMethod.invoke(obj);
+	}
+
+	public static void test(String[] classes, String dir) throws IOException, ClassNotFoundException, Compiler.CompileException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+		String sourceFirstClass = """
+         package com.sb.demo;
+ 
+          public class FirstClass {
+              public String a() {
+                  return "x";
+            }
+          }""";
+
+
+		String source = readFile("output/C.java");
+
+
+		final var compiled = Compiler.java()
+				.from(Paths.get("output/C.java"))
+				.from(Paths.get("output/C2.java"))
+				.compile();
+
+		 compiled.saveTo(Paths.get("./target/generated_classes"));
+		 compiled.stream().forEach(bc -> System.out.println(Compiler.getBinaryName(bc)));
+		 final var loaded = compiled.load();
+		 Class<?> objClass = loaded.get("generatedodl.C");
+		 Object obj = loaded.newInstance("generatedodl.C");
+		 //loaded.stream().forEach(klass -> System.out.println(klass.getSimpleName()));
+		 final var compiler = loaded.reset();
+		 final var sameCompiler = compiled.reset();
+		Method thisMethod = objClass.getDeclaredMethod("print");
+		thisMethod.invoke(obj);
+
+		/*String sourceFirstClass = """
+          package com.sb.demo;
+ 
+          public class FirstClass {
+              public String a() {
+                  return "x";
+            }
+          }""";
+		 final var compiled = Compiler.java()
+		         .from("com.sb.demo.FirstClass", sourceFirstClass)
+		         .from(Paths.get("src/test/java"))
+		         .compile();
+		 compiled.saveTo(Paths.get("./target/generated_classes"));
+		 compiled.stream().forEach(bc -> System.out.println(Compiler.getBinaryName(bc)));
+		 final var loaded = compiled.load();
+		 Class<?> firstClassClass = loaded.get("com.sb.demo.FirstClass");
+		 Object firstClassInstance = loaded.newInstance("com.sb.demo.FirstClass");
+		 loaded.stream().forEach(klass -> System.out.println(klass.getSimpleName()));
+		 final var compiler = loaded.reset();
+		 final var sameCompiler = compiled.reset();*/
+
 	}
 
 
@@ -134,15 +187,19 @@ public class LangCompiler {
 
 			}
 			else if(args[1].equals("-w")){
-				Class<?> c = loadClass("output/output.java");
-				runMethod(c, "print");
+				test(null, null);
+
+				//Class<?> c = loadClass("output/C2.java");
+				//runMethod(c, "print");
 				//ast.tryInterpret(null, null, null, null, scope);
-				JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
+
+
+				/*JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
 				ast.accept(javaGenODLVisitor);
 				String javaCode = javaGenODLVisitor.getGeneratedCode();
 				String fileName = "output";
 				String outputPath = "output/" + fileName + ".java";
-				writeToFile(outputPath, javaCode);
+				writeToFile(outputPath, javaCode);*/
 			}
 			else if(args[1].equals("-s")){
 				String[] splitName = args[0].split("/");

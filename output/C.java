@@ -1,6 +1,7 @@
 
 package generatedodl;
 
+
 public class C{
     public byte b;
     public char c;
