@@ -179,28 +179,8 @@ public class LangCompiler {
 
 		//insert de teste
 		/*INSERT INTO C (b, c, s, i, l, d)
-VALUES (B'00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
+VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 */
-
-		List<Map<String, Object>> resultList = new ArrayList<>();
-
-		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("SELECT * FROM C");
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnCount = rsmd.getColumnCount();
-
-		while (rs.next()) {
-			Map<String, Object> rowMap = new HashMap<>();
-			for (int i = 1; i <= columnCount; i++) {
-				String columnName = rsmd.getColumnName(i);
-				Object columnValue = rs.getObject(i);
-				rowMap.put(columnName, columnValue);
-			}
-			resultList.add(rowMap);
-		}
-
-		rs.close();
-		st.close();
 
 
 		if(args.length >=2){
@@ -240,7 +220,11 @@ VALUES (B'00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				obj.setAttr("i", 13);
 				System.out.println((obj.getAttr("i")));
 				thisMethod.invoke(obj);
+
+				//CREATE TABLE
 				//obj.create(conn);
+
+				//obj.insert(conn, "00001010", 'X', 32767, 214748364, 922337, 3.14159);
 
 
 				List<Map<String, Object>> resultSelectAll = obj.selectAll(conn);
@@ -253,6 +237,7 @@ VALUES (B'00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 					}
 					System.out.println();
 				}
+
 
 
 			}

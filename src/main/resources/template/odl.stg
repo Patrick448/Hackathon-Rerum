@@ -71,6 +71,8 @@ public class <name>  <if(extends)> extends <extends> <endif> implements Entity{
 
             	return resultList;
         }
+
+
 }
 >>
 
