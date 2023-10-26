@@ -11,9 +11,7 @@ import visitors.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 import java.sql.*;
 
 public class LangCompiler {
@@ -167,6 +165,7 @@ public class LangCompiler {
 		props.setProperty("password", "1234");
 		Connection conn = DriverManager.getConnection(url, props);
 
+
 		/*Statement st = conn.createStatement();
 		st.executeQuery("CREATE TABLE accounts (\n" +
 				"\tuser_id serial PRIMARY KEY,\n" +
@@ -177,6 +176,32 @@ public class LangCompiler {
 				"        last_login TIMESTAMP \n" +
 				");");
 		st.close();*/
+
+		//insert de teste
+		/*INSERT INTO C (b, c, s, i, l, d)
+VALUES (B'00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
+*/
+
+		List<Map<String, Object>> resultList = new ArrayList<>();
+
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery("SELECT * FROM C");
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnCount = rsmd.getColumnCount();
+
+		while (rs.next()) {
+			Map<String, Object> rowMap = new HashMap<>();
+			for (int i = 1; i <= columnCount; i++) {
+				String columnName = rsmd.getColumnName(i);
+				Object columnValue = rs.getObject(i);
+				rowMap.put(columnName, columnValue);
+			}
+			resultList.add(rowMap);
+		}
+
+		rs.close();
+		st.close();
+
 
 		if(args.length >=2){
 			if(args.length >=3 && args[2].equals("-v")){
@@ -215,7 +240,21 @@ public class LangCompiler {
 				obj.setAttr("i", 13);
 				System.out.println((obj.getAttr("i")));
 				thisMethod.invoke(obj);
-				obj.create(conn);
+				//obj.create(conn);
+
+
+				List<Map<String, Object>> resultSelectAll = obj.selectAll(conn);
+
+				for (Map<String, Object> rowMap : resultSelectAll) {
+					for (Map.Entry<String, Object> entry : rowMap.entrySet()) {
+						String columnName = entry.getKey();
+						Object columnValue = entry.getValue();
+						System.out.println(columnName + ": " + columnValue);
+					}
+					System.out.println();
+				}
+
+
 			}
 
 			else if(args[1].equals("-s")){

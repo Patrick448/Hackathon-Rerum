@@ -5,6 +5,7 @@ import java.lang.String;
 import java.lang.reflect.Field;
 import orm.*;
 import java.sql.*;
+import java.util.*;
 
 public class C   implements Entity{
     public byte b;
@@ -38,5 +39,30 @@ public class C   implements Entity{
             		Statement st = connection.createStatement();
             		st.executeUpdate("CREATE TABLE C (b bit(8),c char(1),s smallint,i integer,l bigint,d double precision,o serial PRIMARY KEY)");
             		st.close();
+        }
+
+        @Override
+        public List<Map<String, Object>> selectAll(Connection connection) throws SQLException {
+            List<Map<String, Object>> resultList = new ArrayList<>();
+
+            		Statement st = connection.createStatement();
+            		ResultSet rs = st.executeQuery("SELECT * FROM C");
+            		ResultSetMetaData rsmd = rs.getMetaData();
+            		int columnCount = rsmd.getColumnCount();
+
+            		while (rs.next()) {
+            			Map<String, Object> rowMap = new HashMap<>();
+            			for (int i = 1; i <= columnCount; i++) {
+            				String columnName = rsmd.getColumnName(i);
+            				Object columnValue = rs.getObject(i);
+            				rowMap.put(columnName, columnValue);
+            			}
+            			resultList.add(rowMap);
+            		}
+
+            		rs.close();
+            		st.close();
+
+            	return resultList;
         }
 }
