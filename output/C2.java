@@ -39,6 +39,17 @@ public class C2   implements Entity{
             		st.close();
         }
 
+        private static String fieldsAsPGSQLNameList(List fields){
+             Stream<Field> streamFields = fields.stream();
+             String columns = streamFields.map(f -> {
+                    if(f.getType() == Byte.class)
+                        return f.getName()+ "::bit(8)::text";
+                    else
+                        return f.getName();
+                    }).collect(Collectors.joining(", "));
+            return columns;
+        }
+
         @Override
         public List<Entity> selectAll(Connection connection) throws SQLException,IllegalAccessException {
 
@@ -46,19 +57,7 @@ public class C2   implements Entity{
             List<Field> fields =  Arrays.asList(C2.class.getFields());
             Stream<Field> streamFields = fields.stream();
 
-             String columns = streamFields.map(f -> {
-                try {
-                    Object value = f.get(this);
-                    if(f.getType() == Byte.class)
-                        return f.getName()+ "::bit(8)::text";
-                    else
-                        return f.getName();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-
-                }
-                return "";
-            }).collect(Collectors.joining(", "));
+            String columns = fieldsAsPGSQLNameList(fields);
 
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("SELECT "+columns +" FROM C2");
@@ -109,19 +108,7 @@ public class C2   implements Entity{
         List<Field> fields =  Arrays.asList(C2.class.getFields());
         Stream<Field> streamFields = fields.stream();
 
-        String columns = streamFields.map(f -> {
-            try {
-                Object value = f.get(this);
-                if(f.getType() == Byte.class)
-                    return f.getName()+ "::bit(8)::text";
-                else
-                    return f.getName();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-
-            }
-            return "";
-        }).collect(Collectors.joining(", "));
+        String columns = fieldsAsPGSQLNameList(fields);
 
         String query = "SELECT "+ columns+ " FROM C2 WHERE o = "+this.getAttr("o")+";";
         Statement st = connection.createStatement();
