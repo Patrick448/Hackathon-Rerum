@@ -180,6 +180,40 @@ public class C   implements Entity{
             st.close();
     }
 
+      @Override
+        public void update(Connection connection) throws SQLException, IllegalAccessException, NoSuchFieldException{
+                List<Field> fields =  Arrays.asList(C.class.getFields());
+                Stream<Field> streamFields = fields.stream();
+
+                String sets = streamFields.map(f -> {
+                    try {
+                        Object value = ((Field)f).get(this);
+                        String fName = f.getName();
+                        if(value instanceof String)
+                            return fName +"=\'" + value + "\'";
+                        else if(value instanceof Byte)
+                            return fName +"=B\'"+ Utils.byteToBinary(((Byte)value).byteValue())+"\'";
+                        else if (value == null)
+                            return fName +"=DEFAULT";
+                        else
+                            return fName +"="+ String.valueOf(value);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+
+                    }
+                    return "";
+                }).collect(Collectors.joining(", "));
+
+                streamFields = fields.stream();
+                String fieldNames = streamFields.map(f -> {return f.getName();}).collect(Collectors.joining(", "));
+
+                String query = "UPDATE C set " + sets + " WHERE o = "+this.getAttr("o")+";";
+
+                Statement st = connection.createStatement();
+                st.executeUpdate(query);
+                st.close();
+        }
+
     @Override
     public void delete(Connection connection) throws SQLException, IllegalAccessException, NoSuchFieldException{
            String id = String.valueOf(this.getAttr("o"));

@@ -14,9 +14,12 @@ public interface Entity {
 
     public  List<Entity> selectAll(Connection connection) throws  SQLException,IllegalAccessException;
 
+    public  void update(Connection connection) throws  SQLException, IllegalAccessException, NoSuchFieldException;
+
     public  void insert(Connection connection) throws  SQLException, IllegalAccessException, UnsupportedEncodingException;
     public Entity select(Connection connection)  throws  SQLException,IllegalAccessException, NoSuchFieldException;
 
     public  void delete(Connection connection) throws  NoSuchFieldException, SQLException, IllegalAccessException;
+
 
 }

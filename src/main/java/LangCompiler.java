@@ -254,6 +254,9 @@ VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				Entity 	toLoad = (Entity)loaded.newInstance("generatedodl.C");
 				toLoad.setAttr("o", 3L);
 				toLoad.select(conn);
+
+				toLoad.setAttr("i", 6969);
+				toLoad.update(conn);
 				//	obj.create(conn);
 
 				//CREATE TABLE
