@@ -242,8 +242,18 @@ VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				toInsert.setAttr("l", Long.parseLong("1111111"));
 				toInsert.setAttr("d", Double.parseDouble("1.69"));
 				toInsert.setAttr("o", null);
+				//toInsert.insert(conn);
+				/*toInsert.insert(conn);
 				toInsert.insert(conn);
+				toInsert.insert(conn);
+				toInsert.insert(conn);*/
 
+				//toInsert.setAttr("o", 4L);
+				//toInsert.delete(conn);
+
+				Entity 	toLoad = (Entity)loaded.newInstance("generatedodl.C");
+				toLoad.setAttr("o", 3L);
+				toLoad.select(conn);
 				//	obj.create(conn);
 
 				//CREATE TABLE

@@ -1,25 +1,26 @@
 package orm;
+
 public class Utils {
 
-    public static <T extends String> Object fromSQLToJavaType(String sqlType, Object value){
+    public static Object fromSQLToJavaType(String sqlType, Object object){
 
         switch (sqlType) {
             case "bit":
-                return (Byte) value;
+                return (Byte) Byte.parseByte((String) object, 2);
             case "char":
-                return (Character) value;
+                return (Character) object;
             case "smallint":
-                return (Short) value;
+                return (Short) object;
             case "integer":
-                return (Integer) value;
+                return (Integer) object;
             case "bigint":
-                return (Long) value;
+                return (Long) object;
             case "double precision":
-                return (Double) value;
+                return (Double) object;
             case "serial":
-                return (Long) value;
+                return (Long) object;
             default:
-                return value;
+                return object;
         }
     }
 

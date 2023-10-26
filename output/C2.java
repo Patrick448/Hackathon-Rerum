@@ -43,14 +43,50 @@ public class C2   implements Entity{
         public List<Entity> selectAll(Connection connection) throws SQLException,IllegalAccessException {
 
             List<Entity> resultList = new ArrayList<>();
-            Field[] fields = C2.class.getFields();
+            List<Field> fields =  Arrays.asList(C2.class.getFields());
+            Stream<Field> streamFields = fields.stream();
+
+             String columns = streamFields.map(f -> {
+                try {
+                    Object value = f.get(this);
+                    if(f.getType() == Byte.class)
+                        return f.getName()+ "::bit(8)::text";
+                    else
+                        return f.getName();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+
+                }
+                return "";
+            }).collect(Collectors.joining(", "));
 
             Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM C2");
+            ResultSet rs = st.executeQuery("SELECT "+columns +" FROM C2");
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
 
+
+            Statement auxSt = connection.createStatement();
+            ResultSet auxRs = auxSt.executeQuery("SELECT * FROM C2 LIMIT 1;");
+            ResultSetMetaData auxRsmd = auxRs.getMetaData();
+
+
             while (rs.next()) {
+                C2 obj = new C2();
+                for (int i = 0; i < columnCount; i++) {
+                    Field f = fields.get(i);
+                    Object columnValue = Utils.fromSQLToJavaType(auxRsmd.getColumnTypeName(i+1), rs.getObject(i+1));
+                    f.setAccessible(true);
+                    f.set(obj, columnValue);
+                }
+                resultList.add(obj);
+            }
+
+
+            auxRs.close();
+            auxSt.close();
+
+           /* while (rs.next()) {
                 C2 obj = new C2();
                 for (int i = 0; i < columnCount; i++) {
                     Field f = fields[i];
@@ -60,8 +96,7 @@ public class C2   implements Entity{
 
                 }
                 resultList.add(obj);
-            }
-
+            }*/
             rs.close();
             st.close();
 
@@ -69,38 +104,96 @@ public class C2   implements Entity{
         }
 
 
+   @Override
+    public Entity select(Connection connection) throws SQLException,IllegalAccessException, NoSuchFieldException {
+        List<Field> fields =  Arrays.asList(C2.class.getFields());
+        Stream<Field> streamFields = fields.stream();
 
-        @Override
-        public void insert(Connection connection) throws SQLException, IllegalAccessException, UnsupportedEncodingException{
-                List<Field> fields =  Arrays.asList(C2.class.getFields());
-                Stream<Field> streamFields = fields.stream();
+        String columns = streamFields.map(f -> {
+            try {
+                Object value = f.get(this);
+                if(f.getType() == Byte.class)
+                    return f.getName()+ "::bit(8)::text";
+                else
+                    return f.getName();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
 
-                String values = streamFields.map(f -> {
-                    try {
-                        Object value = ((Field)f).get(this);
-                        if(value instanceof String)
-                            return "\'" + value + "\'";
-                        else if(value instanceof Byte)
-                            return "B\'"+ Utils.byteToBinary(((Byte)value).byteValue())+"\'";
-                        else if (value == null)
-                            return "DEFAULT";
-                        else
-                            return String.valueOf(value);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+            }
+            return "";
+        }).collect(Collectors.joining(", "));
 
-                    }
-                    return "";
-                }).collect(Collectors.joining(", "));
+        String query = "SELECT "+ columns+ " FROM C2 WHERE o = "+this.getAttr("o")+";";
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columnCount = rsmd.getColumnCount();
 
-                streamFields = fields.stream();
-                String fieldNames = streamFields.map(f -> {return f.getName();}).collect(Collectors.joining(", "));
+        Statement auxSt = connection.createStatement();
+        ResultSet auxRs = auxSt.executeQuery("SELECT * FROM C2 LIMIT 1;");
+        ResultSetMetaData auxRsmd = auxRs.getMetaData();
 
-                String query = "INSERT into C2 VALUES (" + values + ")";
 
-                Statement st = connection.createStatement();
-                st.executeUpdate(query);
-                st.close();
+        while (rs.next()) {
+            for (int i = 0; i < columnCount; i++) {
+                Field f = fields.get(i);
+                Object columnValue = Utils.fromSQLToJavaType(auxRsmd.getColumnTypeName(i+1), rs.getObject(i+1));
+                f.setAccessible(true);
+                f.set(this, columnValue);
+            }
         }
+
+
+        auxRs.close();
+        auxSt.close();
+        rs.close();
+        st.close();
+
+        return this;
+    }
+
+
+
+    @Override
+    public void insert(Connection connection) throws SQLException, IllegalAccessException, UnsupportedEncodingException{
+            List<Field> fields =  Arrays.asList(C2.class.getFields());
+            Stream<Field> streamFields = fields.stream();
+
+            String values = streamFields.map(f -> {
+                try {
+                    Object value = ((Field)f).get(this);
+                    if(value instanceof String)
+                        return "\'" + value + "\'";
+                    else if(value instanceof Byte)
+                        return "B\'"+ Utils.byteToBinary(((Byte)value).byteValue())+"\'";
+                    else if (value == null)
+                        return "DEFAULT";
+                    else
+                        return String.valueOf(value);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+
+                }
+                return "";
+            }).collect(Collectors.joining(", "));
+
+            streamFields = fields.stream();
+            String fieldNames = streamFields.map(f -> {return f.getName();}).collect(Collectors.joining(", "));
+
+            String query = "INSERT into C2 VALUES (" + values + ")";
+
+            Statement st = connection.createStatement();
+            st.executeUpdate(query);
+            st.close();
+    }
+
+    @Override
+    public void delete(Connection connection) throws SQLException, IllegalAccessException, NoSuchFieldException{
+           String id = String.valueOf(this.getAttr("o"));
+           String query = "DELETE FROM C2 WHERE o ="+id+" ;";
+           Statement st = connection.createStatement();
+           st.executeUpdate(query);
+           st.close();
+    }
 
 }
