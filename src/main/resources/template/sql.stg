@@ -22,7 +22,7 @@ decl(type, name) ::= <<
 >>
 
 oid() ::= <<
-serial PRIMARY KEY
+bigserial PRIMARY KEY
 >>
 
 byte() ::= <<

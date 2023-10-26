@@ -140,10 +140,23 @@ public class JavaGenODLVisitor extends ODLVisitor{
 
         if(t.getName().equals("oid")){
             template = groupTemplate.getInstanceOf("oid");
-        }else{
-            template = groupTemplate.getInstanceOf("raw_text");
+        }else if(t.getName().equals("byte")) {
+            template = groupTemplate.getInstanceOf("byte");
+        }else if(t.getName().equals("char")) {
+            template = groupTemplate.getInstanceOf("char");
+        }else if(t.getName().equals("short")) {
+            template = groupTemplate.getInstanceOf("short");
+        }else if(t.getName().equals("int")) {
+            template = groupTemplate.getInstanceOf("int");
+        }else if(t.getName().equals("long")) {
+            template = groupTemplate.getInstanceOf("long");
+        }else if(t.getName().equals("double")) {
+            template = groupTemplate.getInstanceOf("double");
         }
-        template.add("value", t.getName());
+        else {
+            template = new ST(t.getName());
+        }
+        //template.add("value", t.getName());
         codeStack.push(template);
 
     }

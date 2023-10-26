@@ -164,7 +164,20 @@ public class LangCompiler {
 		props.setProperty("user", "postgres");
 		props.setProperty("password", "1234");
 		Connection conn = DriverManager.getConnection(url, props);
+		/*Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery("SELECT * FROM C");
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnCount = rsmd.getColumnCount();
 
+		while (rs.next()) {
+
+			for (int i = 1; i <= columnCount; i++) {
+				System.out.println(rs.getObject(i));
+			}
+		}
+
+		rs.close();
+		st.close();*/
 
 		/*Statement st = conn.createStatement();
 		st.executeQuery("CREATE TABLE accounts (\n" +
@@ -221,24 +234,27 @@ VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				System.out.println((obj.getAttr("i")));
 				thisMethod.invoke(obj);
 
+				Entity toInsert = (Entity)loaded.newInstance("generatedodl.C");
+				toInsert.setAttr("b", "a".getBytes()[0]);
+				toInsert.setAttr("c", "a");
+				toInsert.setAttr("s", 1);
+				toInsert.setAttr("i", 2);
+				toInsert.setAttr("l", Long.parseLong("1111111"));
+				toInsert.setAttr("d", Double.parseDouble("1.69"));
+				toInsert.setAttr("o", null);
+				toInsert.insert(conn);
+
+				//	obj.create(conn);
+
 				//CREATE TABLE
 				//obj.create(conn);
 
 				//obj.insert(conn, "00001010", 'X', 32767, 214748364, 922337, 3.14159);
 
 
-				List<Map<String, Object>> resultSelectAll = obj.selectAll(conn);
+				List<Entity> resultSelectAll = obj.selectAll(conn);
 
-				for (Map<String, Object> rowMap : resultSelectAll) {
-					for (Map.Entry<String, Object> entry : rowMap.entrySet()) {
-						String columnName = entry.getKey();
-						Object columnValue = entry.getValue();
-						System.out.println(columnName + ": " + columnValue);
-					}
-					System.out.println();
-				}
-
-
+				resultSelectAll.get(0);
 
 			}
 

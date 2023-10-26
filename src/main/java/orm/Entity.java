@@ -1,4 +1,5 @@
 package orm;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
@@ -11,5 +12,8 @@ public interface Entity {
 
     //public void insert(Connection connection, Object... values) throws  SQLException;
 
-    public List<Map<String, Object>> selectAll(Connection connection) throws  SQLException;
+    public  List<Entity> selectAll(Connection connection) throws  SQLException,IllegalAccessException;
+
+    public  void insert(Connection connection) throws  SQLException, IllegalAccessException, UnsupportedEncodingException;
+
 }
