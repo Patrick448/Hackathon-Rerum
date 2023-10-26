@@ -10,6 +10,8 @@ public interface Entity {
     public void setAttr(String attrName, Object value) throws NoSuchFieldException, IllegalAccessException;
     public void create(Connection connection)  throws SQLException;
 
+
+    public Entity fromList(List<String> values, Connection connection) throws SQLException,IllegalAccessException;
     //public void insert(Connection connection, Object... values) throws  SQLException;
 
     public  List<Entity> selectAll(Connection connection) throws  SQLException,IllegalAccessException;
@@ -21,5 +23,6 @@ public interface Entity {
 
     public  void delete(Connection connection) throws  NoSuchFieldException, SQLException, IllegalAccessException;
 
+    public String getValuesListString(Connection connection);
 
 }

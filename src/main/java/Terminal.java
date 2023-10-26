@@ -2,14 +2,12 @@ import com.javax0.sourcebuddy.Compiler;
 import odlLoader.ODLLoader;
 import orm.Entity;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 
 public class Terminal {
 
@@ -115,8 +113,11 @@ class InsertCommand implements Command {
             try {
                 Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
                 Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
-                obj.create(Terminal.getConnection());
-                
+                //obj.create(Terminal.getConnection());
+
+                String[] atributosObjetos = objeto.split(",");
+                obj.fromList(Arrays.asList(atributosObjetos), Terminal.getConnection());
+                obj.insert(Terminal.getConnection());
 
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -129,6 +130,8 @@ class InsertCommand implements Command {
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
 
@@ -175,8 +178,35 @@ class DeleteCommand implements Command {
         if (args.length == 3) {
             String nomeClasse = args[1];
             String id = args[2];
+            long id_long = Long.parseLong(id);
 
-            System.out.println("Executando o comando 'delete' com a classe: " + nomeClasse + " e ID: " + id);
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                obj.setAttr("o", id_long);
+
+                try {
+                    obj.delete(Terminal.getConnection());
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+
         } else {
             System.out.println("Comando 'delete' requer dois argumentos. Exemplo: delete nomeDaClasse id");
         }
@@ -189,8 +219,36 @@ class SelectCommand implements Command {
         if (args.length == 3) {
             String nomeClasse = args[1];
             String id = args[2];
+            long id_long = Long.parseLong(id);
 
-            System.out.println("Executando o comando 'select' com a classe: " + nomeClasse + " e ID: " + id);
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                obj.setAttr("o", id_long);
+
+                try {
+                    obj.select(Terminal.getConnection());
+                    System.out.println(obj.getValuesListString(Terminal.getConnection()));
+
+                } catch (NoSuchFieldException e) {
+                    throw new RuntimeException(e);
+                }
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.out.println("Comando 'select' requer dois argumentos. Exemplo: select nomeDaClasse id");
         }
@@ -203,7 +261,52 @@ class SelectAllCommand implements Command {
         if (args.length == 2) {
             String nomeClasse = args[1];
 
-            System.out.println("Executando o comando 'selectall' com a classe: " + nomeClasse);
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+
+                try {
+                    List<Entity> list = obj.selectAll(Terminal.getConnection());
+                    for(Entity e : list) {
+                        System.out.println(e.getValuesListString(Terminal.getConnection()));
+                    }
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    obj.selectAll(Terminal.getConnection());
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             System.out.println("Comando 'selectall' requer um argumento. Exemplo: selectall nomeDaClasse");
         }
@@ -216,9 +319,40 @@ class UpdateCommand implements Command {
         if (args.length == 4) {
             String nomeClasse = args[1];
             String id = args[2];
+            long id_long = Long.parseLong(id);
             String objeto = args[3];
 
-            System.out.println("Executando o comando 'update' com a classe: " + nomeClasse + " e ID: " + id + " e objeto: " + objeto);
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = null;
+                try {
+                    obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    try {
+                        obj.update(Terminal.getConnection());
+                    } catch (NoSuchFieldException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
         } else {
             System.out.println("Comando 'update' requer três argumentos. Exemplo: update nomeDaClasse id objeto");
         }

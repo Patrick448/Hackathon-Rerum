@@ -104,7 +104,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>LangCompiler</mainClass>
+                            <mainClass>Terminal</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

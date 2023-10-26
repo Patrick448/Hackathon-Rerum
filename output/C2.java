@@ -39,7 +39,29 @@ public class C2   implements Entity{
             		st.close();
         }
 
-        private static String fieldsAsPGSQLNameList(List fields){
+        @Override
+        public Entity fromList(List<String> values, Connection connection) throws SQLException,IllegalAccessException{
+            List<Field> fields =  Arrays.asList(C2.class.getFields());
+            Stream<Field> streamFields = fields.stream();
+
+            Statement auxSt = connection.createStatement();
+            ResultSet auxRs = auxSt.executeQuery("SELECT * FROM C2 LIMIT 1;");
+            ResultSetMetaData auxRsmd = auxRs.getMetaData();
+
+            for(int i=0; i<fields.size(); i++){
+                Field f = fields.get(i);
+                Object object = Utils.fromSQLToJavaTypeUsingString(auxRsmd.getColumnTypeName(i+1), values.get(i));
+                f.setAccessible(true);
+                f.set(this, object);
+            }
+
+            auxRs.close();
+            auxSt.close();
+
+            return this;
+        }
+
+        private static String fieldsAsPGSQLNameList(List<Field> fields){
              Stream<Field> streamFields = fields.stream();
              String columns = streamFields.map(f -> {
                     if(f.getType() == Byte.class)
@@ -173,6 +195,30 @@ public class C2   implements Entity{
             st.executeUpdate(query);
             st.close();
     }
+
+   public String getValuesListString(Connection connection){
+           List<Field> fields =  Arrays.asList(C2.class.getFields());
+           Stream<Field> streamFields = fields.stream();
+
+           String values = streamFields.map(f -> {
+               try {
+                   Object value = ((Field)f).get(this);
+                   if(value instanceof String)
+                       return "\'" + value + "\'";
+                   else if(value instanceof Byte)
+                       return "B\'"+ Utils.byteToBinary(((Byte)value).byteValue())+"\'";
+                   else if (value == null)
+                       return "NULL";
+                   else
+                       return String.valueOf(value);
+               } catch (IllegalAccessException e) {
+                   e.printStackTrace();
+               }
+               return "";
+           }).collect(Collectors.joining(", "));
+
+          return values;
+       }
 
       @Override
         public void update(Connection connection) throws SQLException, IllegalAccessException, NoSuchFieldException{

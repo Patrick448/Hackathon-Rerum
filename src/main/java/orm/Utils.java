@@ -9,18 +9,44 @@ public class Utils {
                 return (Byte) Byte.parseByte((String) object, 2);
             case "char":
                 return (Character) object;
-            case "smallint":
-                return (Short) object;
-            case "integer":
+            case "int2":
                 return (Integer) object;
-            case "bigint":
+            case "int4":
+                return (Integer) object;
+            case "int8":
                 return (Long) object;
-            case "double precision":
+            case "float8":
                 return (Double) object;
-            case "serial":
+            case "bigserial":
                 return (Long) object;
+            case "string":
+                return (String) object;
             default:
                 return object;
+        }
+    }
+
+    public static Object fromSQLToJavaTypeUsingString(String sqlType, String value){
+
+        switch (sqlType) {
+            case "bit":
+                return Byte.parseByte(value, 2);
+            case "char":
+                return (Character)value.toCharArray()[0];
+            case "int2":
+                return Integer.parseInt(value);
+            case "int4":
+                return Integer.parseInt(value);
+            case "int8":
+                return Long.parseLong(value);
+            case "float8":
+                return Double.parseDouble(value);
+            case "bigserial":
+                return Long.parseLong(value);
+            case "string":
+                return value;
+            default:
+                return value;
         }
     }
 
