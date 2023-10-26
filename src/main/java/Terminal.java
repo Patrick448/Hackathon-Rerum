@@ -1,6 +1,8 @@
 import com.javax0.sourcebuddy.Compiler;
 import odlLoader.ODLLoader;
+import orm.Entity;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,9 +14,22 @@ import java.util.Scanner;
 public class Terminal {
 
     static Compiler.Loaded loaded;
+    static Connection connection;
 
     public static void setLoaded(Compiler.Loaded loaded) {
         Terminal.loaded = loaded;
+    }
+
+    public static Compiler.Loaded getLoaded() {
+        return loaded;
+    }
+
+    public static Connection getConnection() {
+        return connection;
+    }
+
+    public static void setConnection(Connection connection) {
+        Terminal.connection = connection;
     }
 
     public static void main(String[] args) {
@@ -30,6 +45,9 @@ public class Terminal {
             throw new RuntimeException(e);
         }
 
+        Terminal.connection = baseConnection;
+
+
         Scanner scanner = new Scanner(System.in);
         Map<String, Command> comandos = new HashMap<>();
 
@@ -39,6 +57,7 @@ public class Terminal {
         comandos.put("select", new SelectCommand());
         comandos.put("selectall", new SelectAllCommand());
         comandos.put("update", new UpdateCommand());
+        comandos.put("create", new CreateCommand());
 
         while (true) {
             System.out.print("Digite um comando: ");
@@ -68,7 +87,6 @@ interface Command {
 
 class LoadCommand implements Command {
 
-
     @Override
     public void execute(String[] args) {
         if (args.length == 2) {
@@ -94,10 +112,59 @@ class InsertCommand implements Command {
             String nomeClasse = args[1];
             String objeto = args[2];
 
-            System.out.println("Executando o comando 'insert' com a classe: " + nomeClasse + " e objeto: " + objeto);
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                obj.create(Terminal.getConnection());
+                
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
 
         } else {
             System.out.println("Comando 'insert' requer dois argumentos. Exemplo: insert nomeDaClasse objeto");
+        }
+    }
+}
+
+class CreateCommand implements Command {
+    @Override
+    public void execute(String[] args) {
+        if (args.length == 2) {
+            String nomeClasse = args[1];
+            try {
+                Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                obj.create(Terminal.getConnection());
+
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        } else {
+            System.out.println("Comando 'create' requer um argumentos. Exemplo: insert nomeDaClasse");
         }
     }
 }

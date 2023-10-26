@@ -51,7 +51,7 @@ public class <name>  <if(extends)> extends <extends> <endif> implements Entity{
             		st.close();
         }
 
-        private static String fieldsAsPGSQLNameList(List<Field> fields){
+        private static String fieldsAsPGSQLNameList(List\<Field\> fields){
              Stream\<Field\> streamFields = fields.stream();
              String columns = streamFields.map(f -\> {
                     if(f.getType() == Byte.class)
