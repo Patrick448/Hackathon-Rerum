@@ -324,32 +324,26 @@ class UpdateCommand implements Command {
 
             try {
                 Class<?> objClass = Terminal.getLoaded().get("generatedodl." + nomeClasse);
-                Entity obj = null;
-                try {
-                    obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
+                Entity obj = (Entity)Terminal.getLoaded().newInstance("generatedodl." + nomeClasse);
+                obj.setAttr("o", id_long);
 
-                try {
-                    try {
-                        obj.update(Terminal.getConnection());
-                    } catch (NoSuchFieldException e) {
-                        throw new RuntimeException(e);
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
+                String[] atributosObjetos = objeto.split(",");
+                obj.fromList(Arrays.asList(atributosObjetos), Terminal.getConnection());
+                obj.update(Terminal.getConnection());
 
             } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
                 throw new RuntimeException(e);
             }
 
