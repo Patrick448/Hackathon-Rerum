@@ -33,6 +33,10 @@ char() ::= <<
 char(1)
 >>
 
+string() ::= <<
+text
+>>
+
 short() ::= <<
 smallint
 >>

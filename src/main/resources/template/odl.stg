@@ -252,6 +252,10 @@ decl(type, name) ::= <<
 public <type> <name>;
 >>
 
+relation_decl(type, name) ::= <<
+public Association <name> = new Association(<type>);
+>>
+
 raw_text(value) ::= <<
 <value>
 >>
@@ -261,6 +265,10 @@ Byte
 >>
 
 char() ::= <<
+String
+>>
+
+string() ::= <<
 String
 >>
 

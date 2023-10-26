@@ -1,4 +1,4 @@
-package application;
+/*package application;
 
 import com.javax0.sourcebuddy.Compiler;
 import com.javax0.sourcebuddy.Fluent;
@@ -128,32 +128,9 @@ public class Application {
     public static void main(String args[]) throws Exception {
         SpringApplication.run(Application.class, args);
 
-       /* odlParser parser = parseFile("teste_class.odl");
-        Node ast = getAST(parser);
-        writeToFile("ast.dot", ast.dotString());
 
-        JavaGenODLVisitor javaGenODLVisitor = new JavaGenODLVisitor();
-        ast.accept(javaGenODLVisitor);
-        String outputDir = "output";
-
-        List<String> classSources = javaGenODLVisitor.getClassSources();
-        List<String> classNames = javaGenODLVisitor.getClassNames();
-
-        for (int i = 0; i < classSources.size(); i++) {
-            writeToFile(outputDir + "/" + classNames.get(i) + ".java", classSources.get(i));
-        }
-
-        Fluent.Compiled compiled = compileClasses(classNames, "output");
-
-        final var loaded = compiled.load();
-        Class<?> objClass = loaded.get("generatedodl.C");
-        Entity obj = (Entity) loaded.newInstance("generatedodl.C");
-        Method thisMethod = objClass.getDeclaredMethod("print");
-        obj.setAttr("i", 13);
-        System.out.println((obj.getAttr("i")));
-        thisMethod.invoke(obj);*/
 
         }
 
 
-    }
+    }*/

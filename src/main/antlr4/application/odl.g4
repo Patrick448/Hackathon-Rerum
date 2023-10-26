@@ -2,14 +2,14 @@ grammar odl;
 
 @parser::header
 {
-//package application;
+//package odlLoader;
 
 import odlAst.*;
 }
 
 @lexer::header
 {
-//package application;
+//package odlLoader;
 }
 
 /* Regras da gramática */
@@ -77,7 +77,7 @@ type returns [Type ast]:
   t2=type{$ast = new Type($t2.ast.getLine(), $t2.ast.getCol(), $t2.ast.getName()); int i=0;}
   ('['']' {$ast.addDimension();})+
   |
-  ( t='byte'  | t='char'  | t='float'  | t='short' | t='int' | t='long' | t='double' |  t='oid' | t='enum'    | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
+  ( t='byte'  | t='char'  | t='float'  | t='short' | t='int' | t='long' | t='double' |  t='oid' | t='string' | t='enum' | t=TYPE  ) {$ast = new Type($t.line, $t.pos, $t.text);}
 ;
 
 ID : [a-z] ([a-z]|[A-Z]|[0-9]|'_')*;

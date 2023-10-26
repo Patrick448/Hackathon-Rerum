@@ -152,6 +152,8 @@ public class JavaGenODLVisitor extends ODLVisitor{
             template = groupTemplate.getInstanceOf("long");
         }else if(t.getName().equals("double")) {
             template = groupTemplate.getInstanceOf("double");
+        }else if(t.getName().equals("string")) {
+            template = groupTemplate.getInstanceOf("string");
         }
         else {
             template = new ST(t.getName());

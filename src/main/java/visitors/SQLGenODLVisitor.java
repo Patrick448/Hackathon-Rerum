@@ -150,6 +150,9 @@ public class SQLGenODLVisitor extends ODLVisitor{
         }else if(t.getName().equals("double")) {
             template = groupTemplate.getInstanceOf("double");
         }
+        else if(t.getName().equals("string")) {
+            template = groupTemplate.getInstanceOf("string");
+        }
         else {
             template = new ST(t.getName());
         }

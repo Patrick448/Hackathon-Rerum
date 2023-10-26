@@ -1,15 +1,15 @@
 grammar lang;
 
-@parser::header
+@odlLoader::header
 {
-//package parser;
+//package odlLoader;
 
 import ast.*;
 }
 
 @lexer::header
 {
-//package parser;
+//package odlLoader;
 }
 
 /* Regras da gramática */

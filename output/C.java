@@ -18,6 +18,7 @@ public class C   implements Entity{
     public Integer i;
     public Long l;
     public Double d;
+    public String str;
     public Long o;
 
     public void print(){
@@ -41,7 +42,7 @@ public class C   implements Entity{
         @Override
         public void create(Connection connection) throws SQLException{
             		Statement st = connection.createStatement();
-            		st.executeUpdate("CREATE TABLE C (b bit(8),c char(1),s smallint,i integer,l bigint,d double precision,o bigserial PRIMARY KEY)");
+            		st.executeUpdate("CREATE TABLE C (b bit(8),c char(1),s smallint,i integer,l bigint,d double precision,str text,o bigserial PRIMARY KEY)");
             		st.close();
         }
 

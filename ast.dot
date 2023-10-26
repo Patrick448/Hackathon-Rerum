@@ -1,12 +1,12 @@
 graph program {
-39 [label=Prog]
-39--24
-24 [label=ClassList]
-24--23
-23 [label= "ClassAst"]
-23--22
-22 [label="Type<C>"]
-23--3
+42 [label=Prog]
+42--27
+27 [label=ClassList]
+27--26
+26 [label= "ClassAst"]
+26--25
+25 [label="Type<C>"]
+26--3
 3 [label=DeclList]
 3--2
 2 [label="Decl"]
@@ -47,33 +47,39 @@ graph program {
 3--21
 21 [label="Decl"]
 21--20
-20 [label="ID<o>"]
+20 [label="ID<str>"]
 21--19
-19 [label="Type<oid>"]
-24--31
-31 [label= "ClassAst"]
-31--30
-30 [label="Type<C2>"]
-31--29
-29 [label=DeclList]
-29--28
-28 [label="Decl"]
-28--27
-27 [label="ID<c>"]
-28--26
-26 [label="Type<C>"]
-24--38
-38 [label= "ClassAst"]
-38--36
-36 [label="Type<C3>"]
-38--35
-35 [label=DeclList]
-35--34
-34 [label="Decl"]
+19 [label="Type<string>"]
+3--24
+24 [label="Decl"]
+24--23
+23 [label="ID<o>"]
+24--22
+22 [label="Type<oid>"]
+27--34
+34 [label= "ClassAst"]
 34--33
-33 [label="ID<i>"]
+33 [label="Type<C2>"]
 34--32
-32 [label="Type<int>"]
+32 [label=DeclList]
+32--31
+31 [label="Decl"]
+31--30
+30 [label="ID<c>"]
+31--29
+29 [label="Type<C>"]
+27--41
+41 [label= "ClassAst"]
+41--39
+39 [label="Type<C3>"]
+41--38
+38 [label=DeclList]
 38--37
-37 [label="Type<C2>"]
+37 [label="Decl"]
+37--36
+36 [label="ID<i>"]
+37--35
+35 [label="Type<int>"]
+41--40
+40 [label="Type<C2>"]
 }

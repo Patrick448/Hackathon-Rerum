@@ -164,36 +164,7 @@ public class LangCompiler {
 		props.setProperty("user", "postgres");
 		props.setProperty("password", "1234");
 		Connection conn = DriverManager.getConnection(url, props);
-		/*Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("SELECT * FROM C");
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnCount = rsmd.getColumnCount();
 
-		while (rs.next()) {
-
-			for (int i = 1; i <= columnCount; i++) {
-				System.out.println(rs.getObject(i));
-			}
-		}
-
-		rs.close();
-		st.close();*/
-
-		/*Statement st = conn.createStatement();
-		st.executeQuery("CREATE TABLE accounts (\n" +
-				"\tuser_id serial PRIMARY KEY,\n" +
-				"\tusername VARCHAR ( 50 ) UNIQUE NOT NULL,\n" +
-				"\tpassword VARCHAR ( 50 ) NOT NULL,\n" +
-				"\temail VARCHAR ( 255 ) UNIQUE NOT NULL,\n" +
-				"\tcreated_on TIMESTAMP NOT NULL,\n" +
-				"        last_login TIMESTAMP \n" +
-				");");
-		st.close();*/
-
-		//insert de teste
-		/*INSERT INTO C (b, c, s, i, l, d)
-VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
-*/
 
 
 		if(args.length >=2){
@@ -229,10 +200,13 @@ VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				final var loaded = compiled.load();
 				Class<?> objClass = loaded.get("generatedodl.C");
 				Entity obj = (Entity)loaded.newInstance("generatedodl.C");
+
 				Method thisMethod = objClass.getDeclaredMethod("print");
 				obj.setAttr("i", 13);
 				System.out.println((obj.getAttr("i")));
 				thisMethod.invoke(obj);
+
+				obj.create(conn);
 
 				Entity toInsert = (Entity)loaded.newInstance("generatedodl.C");
 				toInsert.setAttr("b", "a".getBytes()[0]);
@@ -241,22 +215,22 @@ VALUES ('00001010', 'X', 32767, 2147483647, 9223372036854775807, 3.14159);
 				toInsert.setAttr("i", 2);
 				toInsert.setAttr("l", Long.parseLong("1111111"));
 				toInsert.setAttr("d", Double.parseDouble("1.69"));
+				toInsert.setAttr("str", "Olá");
 				toInsert.setAttr("o", null);
-				//toInsert.insert(conn);
-				/*toInsert.insert(conn);
 				toInsert.insert(conn);
 				toInsert.insert(conn);
-				toInsert.insert(conn);*/
+				toInsert.insert(conn);
+				toInsert.insert(conn);
 
 				//toInsert.setAttr("o", 4L);
 				//toInsert.delete(conn);
 
-				Entity 	toLoad = (Entity)loaded.newInstance("generatedodl.C");
+				/*Entity 	toLoad = (Entity)loaded.newInstance("generatedodl.C");
 				toLoad.setAttr("o", 3L);
 				toLoad.select(conn);
 
 				toLoad.setAttr("i", 6969);
-				toLoad.update(conn);
+				toLoad.update(conn);*/
 				//	obj.create(conn);
 
 				//CREATE TABLE
